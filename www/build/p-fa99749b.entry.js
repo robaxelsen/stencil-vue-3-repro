@@ -1,1 +1,0 @@
-import{r as s,h as o}from"./p-df55f100.js";const r=class{constructor(o){s(this,o)}render(){return o("div",null,JSON.stringify(this.data))}};r.style=":host{display:block}";export{r as my_component}
