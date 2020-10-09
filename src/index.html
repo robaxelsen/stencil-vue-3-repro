@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="/build/stencil-starter-project-name.esm.js"></script>
+    <script nomodule src="/build/stencil-starter-project-name.js"></script>
+    <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="app">
+      <my-component v-bind:data.prop="data"></my-component>
+      <my-component-2 v-bind:data.prop="data"></my-component-2>
+      Data: {{ data }}
+    </div>
+    <script>
+      class MyElement extends HTMLElement {
+        constructor() {
+          super();
+          this._data = undefined;
+          this._shadowRoot = this.attachShadow({mode: 'open'});
+        }
+
+        connectedCallback() {
+          this.render();
+        }
+
+        render() {
+          this.shadowRoot.innerHTML = `
+            <div>${JSON.stringify(this.data)}</div>
+          `
+        }
+        get data() {
+          return this._data;
+        }
+
+        get shadowRoot() {
+          return this._shadowRoot;
+        }
+        set data(newVal) {
+          this._data = newVal;
+          // trigger render on data change, attributeChangedCallback() is not called
+          this.render();
+        }
+      }
+
+      customElements.define('my-component-2', MyElement);
+    </script>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            data: [
+              {
+                id: 'id1',
+                label: 'Option 1'
+              },
+              {
+                id: 'id2',
+                label: 'Option 2'
+              },
+            ]
+          }
+        },
+      });
+      app.config.isCustomElement = tag => tag.startsWith('my-');
+      app.mount('#app');
+
+      // Vue 2
+      // Vue.config.ignoredElements = [/my-\w*/];
+      /*const app = new Vue({
+        el: '#app',
+        data: {
+          data: {
+            a: 1
+          }
+        }
+      });*/
+    </script>
+  </body>
+</html>
